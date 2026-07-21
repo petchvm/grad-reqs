@@ -221,6 +221,7 @@
   .item-content { flex: 1; min-width: 0; }
   .item-title { font-size: 13px; color: var(--text); line-height: 1.4; transition: color 0.15s; }
   button.item-row.checked .item-title { text-decoration: line-through; color: var(--text-dim); }
+  .item-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
   .item-ts { font-size: 10px; color: var(--text-dim); margin-top: 3px; letter-spacing: 0.2px; }
   .item-badges { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
 
@@ -260,29 +261,29 @@
   }
   .badge-link:hover { background: var(--badge-green-border); }
 
-  /* ─── CONTACTS ─── */
-  .contacts-section {
+  /* ─── COLLAPSIBLE PANELS (generic) ─── */
+  .panel {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
   }
-  .contacts-header {
+  .panel-header {
     display: flex; align-items: center; gap: 12px; padding: 14px 18px;
     cursor: pointer; user-select: none; transition: background 0.15s;
   }
-  .contacts-header:hover { background: var(--surface2); }
-  .contacts-title {
-    font-size: 13px; font-weight: 600; color: var(--text-muted);
-    flex: 1; text-transform: uppercase; letter-spacing: 0.8px;
-  }
-  .contacts-body {
+  .panel-header:hover { background: var(--surface2); }
+  .panel-icon { font-size: 16px; flex-shrink: 0; }
+  .panel-titles { flex: 1; min-width: 0; }
+  .panel-title { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .panel-sub { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+  .panel-body {
     display: grid; grid-template-rows: 0fr;
     border-top: 1px solid transparent;
     transition: grid-template-rows 0.25s cubic-bezier(0.4,0,0.2,1), border-color 0.25s;
   }
-  .contacts-section.expanded .contacts-body {
-    grid-template-rows: 1fr; border-top-color: var(--border);
-  }
-  .contacts-body-inner { overflow: hidden; padding: 12px 18px; }
+  .panel.expanded .panel-body { grid-template-rows: 1fr; border-top-color: var(--border); }
+  .panel-body-inner { overflow: hidden; padding: 12px 18px; }
+
+  /* ─── CONTACTS ─── */
   .contacts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
   .contact-card {
     background: var(--surface2); border: 1px solid var(--border);
@@ -292,6 +293,50 @@
   .contact-prog { font-size: 11px; color: var(--text-dim); margin-bottom: 2px; }
   .contact-name { font-size: 13px; color: var(--text); font-weight: 600; }
   .contact-email { font-size: 11px; color: var(--blue); margin-top: 2px; word-break: break-all; }
+
+  /* ─── CALENDAR ─── */
+  .cal-caption { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .cal-legend { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+  .cal-list { display: flex; flex-direction: column; }
+  .cal-row {
+    display: flex; gap: 14px; padding: 9px 0; align-items: baseline;
+    border-bottom: 1px solid var(--item-sep);
+  }
+  .cal-row:last-child { border-bottom: none; }
+  .cal-date { flex: 0 0 116px; font-size: 12px; font-weight: 700; color: var(--gold); }
+  .cal-activity { flex: 1; font-size: 13px; color: var(--text); line-height: 1.45; }
+  .cal-row.grad {
+    border-left: 2px solid var(--gold); padding-left: 12px;
+    margin-left: -14px; background: var(--badge-yellow-bg);
+  }
+  .cal-row.grad .cal-date::before { content: '🎓 '; }
+  .cal-row.past { opacity: 0.42; }
+  .cal-row.past .cal-date { text-decoration: line-through; }
+  @media (max-width: 600px) {
+    .cal-row { flex-direction: column; gap: 2px; }
+    .cal-date { flex-basis: auto; }
+    .cal-row.grad { margin-left: -14px; }
+  }
+
+  /* ─── EMPLOYMENT PANEL ─── */
+  .emp-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .emp-body p { margin-bottom: 10px; }
+  .emp-body strong { color: var(--text); }
+  .emp-steps { margin: 0 0 12px 18px; padding: 0; }
+  .emp-steps li { margin-bottom: 6px; }
+  .emp-certs { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .emp-certs li {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text); font-weight: 600; font-size: 12px;
+  }
+  .emp-note { font-size: 11px; color: var(--text-dim); font-style: italic; }
+  .emp-link {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;
+    padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600;
+    background: var(--badge-green-bg); color: var(--green);
+    border: 1px solid var(--badge-green-border); text-decoration: none;
+  }
+  .emp-link:hover { background: var(--badge-green-border); }
 
   /* ─── MODAL ─── */
   .modal-overlay {
@@ -398,17 +443,69 @@
 
   <div id="sections-container"></div>
 
-  <div class="contacts-section" id="contacts-section">
-    <div class="contacts-header" onclick="toggleContacts()" role="button" tabindex="0"
-         aria-expanded="false" id="contacts-header"
-         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleContacts()}">
-      <span style="font-size:16px">📞</span>
-      <span class="contacts-title">Key Contacts</span>
-      <span class="chevron" id="contacts-chevron">▼</span>
+  <!-- Calendar of Activities -->
+  <div class="panel">
+    <div class="panel-header" role="button" tabindex="0" aria-expanded="false"
+         onclick="togglePanel(this)"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel(this)}">
+      <span class="panel-icon">📅</span>
+      <div class="panel-titles">
+        <div class="panel-title">Calendar of Activities</div>
+        <div class="panel-sub">First Quarter, AY 2026–2027</div>
+      </div>
+      <span class="chevron">▼</span>
     </div>
-    <div class="contacts-body" id="contacts-body">
-      <div class="contacts-body-inner">
+    <div class="panel-body">
+      <div class="panel-body-inner">
+        <div class="cal-legend">🎓 = graduation milestone</div>
+        <div class="cal-list" id="cal-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Contacts -->
+  <div class="panel">
+    <div class="panel-header" role="button" tabindex="0" aria-expanded="false"
+         onclick="togglePanel(this)"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel(this)}">
+      <span class="panel-icon">📞</span>
+      <div class="panel-titles"><div class="panel-title">Key Contacts</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="panel-body">
+      <div class="panel-body-inner">
         <div class="contacts-grid" id="contacts-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employment proof -->
+  <div class="panel">
+    <div class="panel-header" role="button" tabindex="0" aria-expanded="false"
+         onclick="togglePanel(this)"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();togglePanel(this)}">
+      <span class="panel-icon">💼</span>
+      <div class="panel-titles">
+        <div class="panel-title">Need proof you're graduating?</div>
+        <div class="panel-sub">Interim certifications for employment</div>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="panel-body">
+      <div class="panel-body-inner emp-body">
+        <p>If your employer needs proof of your upcoming graduation <strong>before</strong> the official documents (TOR, diploma, certificate of graduation) are released in October, the Registrar can issue interim certifications.</p>
+        <ol class="emp-steps">
+          <li>Go to <strong>Window 1</strong> and request a Service Request Form
+            (or print your own: <a class="emp-link" href="https://mapua.sgp1.cdn.digitaloceanspaces.com/modular-frame-resources/LzX1VpgV7o5MP1N9jj4JZkitUF2HvgYKDLkgfjKl.pdf" target="_blank" rel="noopener">↗ Service Request Form</a>)</li>
+          <li>Fill it out and request the certifications you need.</li>
+          <li>Processing takes about <strong>1 week</strong> (e.g., requested July 20 → available July 27).</li>
+        </ol>
+        <p style="margin-bottom:6px"><strong>Available now:</strong></p>
+        <ul class="emp-certs">
+          <li>Certification of Completion of Prescribed Curriculum</li>
+          <li>Certification of Grades</li>
+        </ul>
+        <p class="emp-note">Whether these suffice depends on your employer. More details to be added once the documents are received.</p>
       </div>
     </div>
   </div>
@@ -479,12 +576,16 @@ const SECTIONS = [
   {
     id: 'registrar', name: 'Office of the Registrar', icon: '🏛️',
     group: 'Academic Completion',
-    note: 'Submit physical copies to the Registrar office (Window #4) on or before July 31, 2026. All forms must be duly signed.',
+    note: 'Buy a transparent plastic envelope (₱15 at the bookstore), place all printed &amp; signed documents inside, and submit physically at the Registrar on or before July 31, 2026 — Window 5 (Ma\'am Diana) is very accommodating; Window 4 may also accept submissions. Also complete the online Application for Graduation form — the Registrar uses it to confirm your graduating status with Mr. Teem Torres (CSAD Dept).',
     items: [
-      { id: 'reg-01', title: 'Signed Thesis Approval Sheet', badge: 'ref' },
-      { id: 'reg-02', title: 'Editorial Form (Proof of Editing) — signed by thesis adviser and SOIT Dean', badge: 'ref' },
-      { id: 'reg-03', title: 'Application for Graduation (FM-RO-36-01 / FM-RO-37-01) — signed by Mr. Teem Torres and CC Ms. Analita B. Poquiz (CSAD Dept)', link: 'https://forms.office.com/r/nF9Nb90gTV' },
-      { id: 'reg-04', title: 'FM-RO-66-03 Waiver for Application of TOR and Diploma (if not yet uploaded)', link: 'https://mapua.sgp1.cdn.digitaloceanspaces.com/modular-frame-resources/11FqcqOBpuBThpnY1PK7fpViIymqiHefVE5QqFnT.pdf' },
+      { id: 'reg-05', title: 'Transparent plastic envelope (₱15 at the bookstore) — holds all physical documents' },
+      { id: 'reg-01', title: 'Signed Thesis Approval Sheet', link: 'https://docs.google.com/document/d/1QLopQtJOstHAQPZTu_yA9TgXEkLozEJQ/edit' },
+      { id: 'reg-06', title: 'Signed Final Thesis Approval Sheet', link: 'https://mapua.sgp1.cdn.digitaloceanspaces.com/modular-frame-resources/wQaipi4qVsO0KsKXXIpnPDUPeyG2PNA8ZcVYyGjm.pdf' },
+      { id: 'reg-02', title: 'Signed Editorial Certification', link: 'https://docs.google.com/document/d/167hhSMl3lDTCVILXuEdNxCsgjRm4at2N/edit' },
+      { id: 'reg-07', title: 'Proof of Publication', desc: 'Print any proof your paper was submitted and acknowledged by the publisher (e.g., a screenshot of the acceptance email).' },
+      { id: 'reg-03', title: 'Application for Graduation Form (FM-RO-36-01) — printed &amp; filled out', link: 'https://fs2.mapua.edu.ph/MapuaWebsite/Downloads/For%20Students/RO/FM-RO-36-01_-_APPLICATION_FOR_GRADUATION_(Baccalaureate_Degree).pdf' },
+      { id: 'reg-08', title: 'Online Application for Graduation form submitted', link: 'https://forms.office.com/r/nF9Nb90gTV' },
+      { id: 'reg-04', title: 'FM-RO-66-03 Waiver for Application of TOR &amp; Diploma', badge: 'conditional', desc: "Only for students NOT in the graduation lineup due to missing official records. Ask the Registrar if you're on the qualification list.", link: 'https://mapua.sgp1.cdn.digitaloceanspaces.com/modular-frame-resources/11FqcqOBpuBThpnY1PK7fpViIymqiHefVE5QqFnT.pdf' },
     ]
   },
   {
@@ -587,6 +688,27 @@ const CONTACTS = [
   { dept: 'Registrar', programs: 'All programs', name: 'Marietta M. Jayag', email: 'mmjayag@mapua.edu.ph' },
 ];
 
+// ─── CALENDAR (First Quarter, AY 2026–2027) ───
+// `iso` = end-of-day of the event's last date, used to auto-dim past entries.
+const CALENDAR = [
+  { label: 'July 28 – 31',      iso: '2026-07-31', activity: 'Enrolment' },
+  { label: 'July 31',           iso: '2026-07-31', activity: 'Deadline for completion of deficiencies by 3T2025 candidates for graduation', grad: true },
+  { label: 'August 3',          iso: '2026-08-03', activity: 'Start of classes' },
+  { label: 'August 17',         iso: '2026-08-17', activity: 'Start of application for reactivation, shifting of program/modality, and withdrawal of course/s' },
+  { label: 'August 28',         iso: '2026-08-28', activity: 'Approval of 3T2025 list of candidates for graduation by Faculty', grad: true },
+  { label: 'September 2',       iso: '2026-09-02', activity: 'Approval of 3T2025 list of candidates for graduation by Academic Council', grad: true },
+  { label: 'September 3',       iso: '2026-09-03', activity: 'Approval of 3T2025 list of candidates for graduation by the Board of Trustees', grad: true },
+  { label: 'September 7',       iso: '2026-09-07', activity: 'Start of application for diploma and transcript of records', grad: true },
+  { label: 'September 14',      iso: '2026-09-14', activity: 'Start of application for Leave of Absence' },
+  { label: 'September 18',      iso: '2026-09-18', activity: 'Deadline for application of withdrawal of course' },
+  { label: 'September 25',      iso: '2026-09-25', activity: 'Deadline for shifting of program' },
+  { label: 'October 2',         iso: '2026-10-02', activity: 'Deadline for application of cancellation of enrollment' },
+  { label: 'October 17',        iso: '2026-10-17', activity: 'Last day of Examination' },
+  { label: 'October 17, 5:00 PM', iso: '2026-10-17', activity: 'Deadline of Final Grade Encoding (FGE)' },
+  { label: 'October 20 – 23',   iso: '2026-10-23', activity: '2Q2026 Enrolment (load finalization, assessment and payment)' },
+  { label: 'October 30',        iso: '2026-10-30', activity: 'Deadline for completion of deficiencies by 1Q2026 candidates for graduation', grad: true },
+];
+
 // ─── STATE ───
 let checked    = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
 let notes      = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
@@ -678,7 +800,7 @@ function copyProgressLink() {
 }
 
 // ─── TOTALS (required items only) ───
-const isRequired = i => i.badge !== 'optional';
+const isRequired = i => i.badge !== 'optional' && i.badge !== 'conditional';
 
 function totalItems() {
   return SECTIONS.reduce((s, sec) => s + sec.items.filter(isRequired).length, 0);
@@ -759,13 +881,14 @@ function toggleAllSections() {
   updateExpandAllBtn();
 }
 
-// ─── TOGGLE CONTACTS ───
-function toggleContacts() {
-  const sec = document.getElementById('contacts-section');
-  sec.classList.toggle('expanded');
-  const isExp = sec.classList.contains('expanded');
-  document.getElementById('contacts-chevron').style.transform = isExp ? 'rotate(180deg)' : '';
-  document.getElementById('contacts-header').setAttribute('aria-expanded', String(isExp));
+// ─── TOGGLE PANEL (generic collapsible) ───
+function togglePanel(header) {
+  const panel = header.closest('.panel');
+  panel.classList.toggle('expanded');
+  const exp = panel.classList.contains('expanded');
+  header.setAttribute('aria-expanded', String(exp));
+  const chev = header.querySelector('.chevron');
+  if (chev) chev.style.transform = exp ? 'rotate(180deg)' : '';
 }
 
 // ─── NOTES ───
@@ -831,6 +954,7 @@ function renderBadge(item) {
   const badges = [];
   if (item.badge === 'required') badges.push('<span class="badge badge-required">Required</span>');
   if (item.badge === 'optional') badges.push('<span class="badge badge-optional">Optional — not counted</span>');
+  if (item.badge === 'conditional') badges.push('<span class="badge badge-optional">If applicable</span>');
   if (item.badge === 'ref')      badges.push('<span class="badge badge-ref">↗ See Thesis 3</span>');
   if (item.link) badges.push(`<a class="badge badge-link" href="${item.link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Open</a>`);
   if (item.links) item.links.forEach(l => {
@@ -868,6 +992,7 @@ function renderSections() {
               <div class="item-check"><span class="checkmark">✓</span></div>
               <div class="item-content">
                 <div class="item-title">${item.title}</div>
+                ${item.desc ? `<div class="item-desc">${item.desc}</div>` : ''}
                 ${renderBadge(item)}
                 <div class="item-ts">${isChecked && ts ? 'checked ' + timeAgo(ts) : ''}</div>
               </div>
@@ -923,10 +1048,26 @@ function renderContacts() {
     </div>`).join('');
 }
 
+function renderCalendar() {
+  const now = Date.now();
+  document.getElementById('cal-list').innerHTML = CALENDAR.map(e => {
+    const past = new Date(e.iso + 'T23:59:59+08:00').getTime() < now;
+    const cls = ['cal-row'];
+    if (e.grad) cls.push('grad');
+    if (past)   cls.push('past');
+    return `
+      <div class="${cls.join(' ')}">
+        <div class="cal-date">${e.label}</div>
+        <div class="cal-activity">${e.activity}</div>
+      </div>`;
+  }).join('');
+}
+
 // ─── INIT ───
 loadStateFromHash();
 renderSections();
 renderContacts();
+renderCalendar();
 updateHeaderProgress();
 updateDeadlineCountdown();
 if (localStorage.getItem('mapua-info-dismissed')) {
